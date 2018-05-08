@@ -20,8 +20,8 @@ function dashify(title) {
 function loadSpreadsheet(id, creds, callback) {
 	let doc = new GoogleSpreadsheet(id);
 
-	if (!callback) {
-		callback = creds;
+	if (!callback || !creds) {
+		callback = callback || creds;
 		creds = null;
 
 		getData(doc, callback);
@@ -97,7 +97,7 @@ function getData(doc, callback) {
 function gulpInterface(id, creds) {
 	let stream = new EventStream.Stream();
 
-	loadSpreadsheet(id, function (err, data) {
+	loadSpreadsheet(id, creds, function (err, data) {
 		if (err) {
 			console.log(err);
 			return;
