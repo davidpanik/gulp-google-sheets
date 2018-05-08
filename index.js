@@ -1,6 +1,7 @@
 let GoogleSpreadsheet = require('google-spreadsheet');
 let EventStream = require('event-stream');
 let Vinyl = require('vinyl');
+let fs = require('fs');
 let data = {};
 
 // Combine row/col co-ordinates as spreadsheet like reference
