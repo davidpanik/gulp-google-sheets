@@ -1,0 +1,17 @@
+{
+  "name": "gulp-google-sheets",
+  "version": "1.0.0",
+  "description": "Gulp plugin to pull down content from Google Sheets",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "event-stream": "^3.3.4",
+    "google-spreadsheet": "^2.0.4",
+    "vinyl": "^2.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Storey",
+  "license": "MIT"
+}
