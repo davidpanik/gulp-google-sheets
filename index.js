@@ -1,7 +1,6 @@
 let GoogleSpreadsheet = require('google-spreadsheet');
 let EventStream = require('event-stream');
 let Vinyl = require('vinyl');
-let fs = require('fs');
 let data = {};
 
 // Combine row/col co-ordinates as spreadsheet like reference
@@ -94,4 +93,26 @@ function getData(doc, callback) {
 	});
 }
 
-module.exports = loadSpreadsheet;
+// The part that interfaces with Gulp and wraps our data in a stream
+function gulpInterface(id, creds) {
+	let stream = new EventStream.Stream();
+
+	loadSpreadsheet(id, function (err, data) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+
+		let file = new Vinyl({
+			path: dashify(data.title) + '.json',
+			contents: new Buffer(JSON.stringify(data, null, '    '))
+		});
+
+		stream.emit('data', file);
+		stream.emit('end');
+	});
+
+	return stream.pipe(EventStream.through());
+}
+
+module.exports = gulpInterface;
