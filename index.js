@@ -17,14 +17,14 @@ function dashify(title) {
 }
 
 // Initiate things with Google Sheets
-function loadSpreadsheet(id, creds, callback) {
+function loadSpreadsheet(id, method, creds, callback) {
 	let doc = new GoogleSpreadsheet(id);
 
 	if (!callback || !creds) {
 		callback = callback || creds;
 		creds = null;
 
-		getData(doc, callback);
+		getData(doc, method, callback);
 
 		return;
 	}
@@ -35,19 +35,17 @@ function loadSpreadsheet(id, creds, callback) {
 			return;
 		}
 
-		getData(doc, callback);
+		getData(doc, method, callback);
 	});
 }
 
 // Retrieve the data from Google Sheets
-function getData(doc, callback) {
+function getData(doc, method, callback) {
 	doc.getInfo(function (err, info) {
 		if (err) {
 			callback(err);
 			return;
 		}
-
-		let sheetsLoaded = 0;
 
 		for (let item in info) {
 			data[item] = info[item];
@@ -60,44 +58,99 @@ function getData(doc, callback) {
 			'authorName': info['author']['name'],
 			'authorEmail': info['author']['email'],
 			'worksheets': []
-		}
+		};
 
-		for (let sheet in info.worksheets) {
+		for (let currentSheet of info.worksheets) {
+			let sheetsLoaded = 0;
 			let newSheet = {
-				'url': info.worksheets[sheet]['url'],
-				'id': info.worksheets[sheet]['id'],
-				'title': info.worksheets[sheet]['title'],
-				'rowCount': info.worksheets[sheet]['rowCount'],
-				'colCount': info.worksheets[sheet]['colCount'],
-				'cells': {}
-			}
+				'url': currentSheet['url'],
+				'id': currentSheet['id'],
+				'title': currentSheet['title'],
+				'rowCount': currentSheet['rowCount'],
+				'colCount': currentSheet['colCount']
+			};
 
 			data.worksheets.push(newSheet);
 
-			info.worksheets[sheet].getCells(function (err, cells) {
-				if (err) {
-					callback(err);
-					return;
-				}
-
-				for (let cell in cells) {
-					let currentCell = cells[cell];
-					newSheet.cells[makeCellRef(currentCell.row, currentCell.col)] = currentCell.value;
-				}
-
+			function sheetDone() {
 				if (++sheetsLoaded >= info.worksheets.length) {
 					callback(null, data);
 				}
-			});
+			}
+
+			if (method === 'cells') {
+				newSheet.cells = {};
+
+				currentSheet.getCells(function (err, cells) {
+					if (err) {
+						callback(err);
+						return;
+					}
+
+					for (let currentCell of cells) {
+						newSheet.cells[makeCellRef(currentCell.row, currentCell.col)] = currentCell.value;
+					}
+
+					sheetDone();
+				});
+
+				return;
+			}
+
+			if (method === 'grid') {
+				newSheet.grid = Array(currentSheet['rowCount']).fill(Array(currentSheet['colCount']).fill(''));
+
+				currentSheet.getCells(function (err, cells) {
+					if (err) {
+						callback(err);
+						return;
+					}
+
+					for (let currentCell of cells) {
+						newSheet.grid[currentCell.row][currentCell.col] = currentCell.value;
+					}
+
+					sheetDone();
+				});
+
+				return;
+			}
+
+			if (method === 'rows') {
+				newSheet.rows = [];
+
+				currentSheet.getRows(function (err, rows) {
+					if (err) {
+						callback(err);
+						return;
+					}
+
+					for (let currentRow of rows) {
+						let newRow = {};
+
+						for (let attr in currentRow) {
+							if (attr.charAt(0) !== '_' && attr !== 'app:edited' && typeof (currentRow[attr]) === 'string') {
+								newRow[attr] = currentRow[attr];
+							}
+						}
+
+						newSheet.rows.push(newRow);
+					}
+
+					sheetDone();
+				});
+
+				return;
+			}
 		}
 	});
 }
 
 // The part that interfaces with Gulp and wraps our data in a stream
-function gulpInterface(id, creds) {
+function gulpInterface(id, method, creds) {
 	let stream = new EventStream.Stream();
 
-	loadSpreadsheet(id, creds, function (err, data) {
+	loadSpreadsheet(id, method || 'cells', creds, function (err, data) {
 		if (err) {
 			console.log(err);
 			return;
