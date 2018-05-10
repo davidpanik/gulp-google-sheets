@@ -3,15 +3,29 @@
   "version": "1.0.0",
   "description": "Gulp plugin to pull down content from Google Sheets",
   "main": "index.js",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {},
   "devDependencies": {
     "event-stream": "^3.3.4",
     "google-spreadsheet": "^2.0.4",
+    "gulp": "^3.9.1",
     "vinyl": "^2.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/davidpanik/gulp-google-sheets"
+  },
+  "keywords": [
+    "gulpplugin",
+    "spreadsheet",
+    "google sheets",
+    "gulp"
+  ],
   "author": "David Storey",
   "license": "MIT"
 }
