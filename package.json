@@ -1,6 +1,6 @@
 {
   "name": "gulp-google-sheets",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Gulp plugin to pull down content from Google Sheets",
   "main": "index.js",
   "engines": {
