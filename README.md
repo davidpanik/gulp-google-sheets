@@ -7,7 +7,7 @@ And is inspired by: [gulp-google-spreadsheets](https://raw.githubusercontent.com
 
 ## Installation
 
-    npm install gulp-google-spreadsheets --save-dev
+    npm install gulp-google-sheets --save-dev
 
 ## Basic usage
 
