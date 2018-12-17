@@ -60,8 +60,9 @@ function getData(doc, method, callback) {
 			'worksheets': []
 		};
 
+		let sheetsLoaded = 0;
+
 		for (let currentSheet of info.worksheets) {
-			let sheetsLoaded = 0;
 			let newSheet = {
 				'url': currentSheet['url'],
 				'id': currentSheet['id'],
@@ -93,8 +94,6 @@ function getData(doc, method, callback) {
 
 					sheetDone();
 				});
-
-				return;
 			}
 
 			if (method === 'grid') {
@@ -112,8 +111,6 @@ function getData(doc, method, callback) {
 
 					sheetDone();
 				});
-
-				return;
 			}
 
 			if (method === 'rows') {
@@ -139,8 +136,6 @@ function getData(doc, method, callback) {
 
 					sheetDone();
 				});
-
-				return;
 			}
 		}
 	});

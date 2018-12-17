@@ -13,7 +13,7 @@ And is inspired by: [gulp-google-spreadsheets](https://raw.githubusercontent.com
 
 	let googleSheets = require('gulp-google-sheets');
 
-	googleSheets(id, [output,] [credentials])
+	googleSheets(id, output, [credentials])
 	.pipe(gulp.dest('./data/'));
 
 **id** is the long identifier from the URL of the spreadsheet.
@@ -36,7 +36,7 @@ In addition to the above, if a spreadsheet hasn't been publically accessible you
 
 The plugin supports three different formats of output it can produce:
 
-**cells** (default) - Returns an object of all populated cells included with their spreadsheet identifier (e.g. A3) as a key.
+**cells** - Returns an object of all populated cells included with their spreadsheet identifier (e.g. A3) as a key.
 
 **grid** - Returns a 2D array of all cells (regardless of whether they are populated or empty).
 
