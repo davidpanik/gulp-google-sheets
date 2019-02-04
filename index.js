@@ -1,7 +1,6 @@
 let GoogleSpreadsheet = require('google-spreadsheet');
 let EventStream = require('event-stream');
 let Vinyl = require('vinyl');
-let data = {};
 
 // Combine row/col co-ordinates as spreadsheet like reference
 // e.g. 1,1 == A1 | 4,3 === C4
@@ -41,6 +40,8 @@ function loadSpreadsheet(id, method, creds, callback) {
 
 // Retrieve the data from Google Sheets
 function getData(doc, method, callback) {
+	let data = {};
+
 	doc.getInfo(function (err, info) {
 		if (err) {
 			callback(err);
