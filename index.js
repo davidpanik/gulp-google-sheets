@@ -143,7 +143,7 @@ function getData(doc, method, callback) {
 }
 
 // The part that interfaces with Gulp and wraps our data in a stream
-function gulpInterface(id, method, creds) {
+function gulpInterface(id, method, creds, wrapper) {
 	let stream = new EventStream.Stream();
 
 	loadSpreadsheet(id, method || 'cells', creds, function (err, data) {
@@ -152,9 +152,19 @@ function gulpInterface(id, method, creds) {
 			return;
 		}
 
+		let fileName = dashify(data.title);
+		let newData = {};
+
+		if (wrapper && wrapper !== '') {
+			newData[wrapper] = data;
+			data = newData;
+		} else {
+			newData = data;
+		}
+
 		let file = new Vinyl({
-			path: dashify(data.title) + '.json',
-			contents: new Buffer(JSON.stringify(data, null, '    '))
+			path: fileName + '.json',
+			contents: new Buffer(JSON.stringify(newData, null, '    '))
 		});
 
 		stream.emit('data', file);

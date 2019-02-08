@@ -13,7 +13,7 @@ And is inspired by: [gulp-google-spreadsheets](https://raw.githubusercontent.com
 
 	let googleSheets = require('gulp-google-sheets');
 
-	googleSheets(id, output, [credentials])
+	googleSheets(id, output, [credentials], [credentials])
 	.pipe(gulp.dest('./data/'));
 
 **id** is the long identifier from the URL of the spreadsheet.
@@ -21,6 +21,8 @@ And is inspired by: [gulp-google-spreadsheets](https://raw.githubusercontent.com
 **output** specifies the desired output format (see section below)
 
 **credentials** is a JSON object required for accessing a private spreadsheets
+
+**wrapper** a string which if provided will be used a wrapper key to contain the returned data
 
 The plugin return a JSON object as a Vinyl stream that can be piped to another plugin or directly to an output file.
 
